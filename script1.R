@@ -42,3 +42,5 @@ mariamhelloworld
 # Bente wrote:
 paste("Hello world")
 
+Hello_myname_is_MariamReda
+
