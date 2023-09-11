@@ -32,3 +32,19 @@ my_fun("Dirt_Gravel", "Paved")
 2+2
 #why is this not working?
 
+jjjjøpkøk
+
+bjnkkn
+
+ggygihy
+mariamhelloworld 
+#himariam
+
+# addition sentence by Isil, vers2
+
+# Bente wrote:
+paste("Hello world")
+#"changes made"
+64+24
+
+MariamReda_Hello_Universe 
