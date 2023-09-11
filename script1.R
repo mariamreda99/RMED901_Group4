@@ -28,6 +28,12 @@ my_fun <- function(a, b){
 my_fun("Dirt_Gravel", "Paved")
 
 jjjjøpkøk
+
+bjnkkn
+
+ggygihy
+mariamhelloworld 
+=======
 #himariam
 
 # addition sentence by Isil, vers2
@@ -35,3 +41,4 @@ jjjjøpkøk
 
 # Bente wrote:
 paste("Hello world")
+
