@@ -26,8 +26,9 @@ my_fun <- function(a, b){
 }
 
 my_fun("Dirt_Gravel", "Paved")
-jjjjøpkøk
-bjnkkn
 
+jjjjøpkøk
+#himariam
 
 addition sentence by Isil, vers2
+=======
