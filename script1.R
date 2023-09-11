@@ -30,5 +30,8 @@ my_fun("Dirt_Gravel", "Paved")
 jjjjøpkøk
 #himariam
 
-addition sentence by Isil, vers2
-=======
+# addition sentence by Isil, vers2
+# =======
+
+# Bente wrote:
+paste("Hello world")
