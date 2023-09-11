@@ -30,4 +30,4 @@ jjjjøpkøk
 bjnkkn
 
 
-addition sentence by Isil
+addition sentence by Isil, vers2
