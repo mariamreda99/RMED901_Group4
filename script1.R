@@ -26,5 +26,3 @@ my_fun <- function(a, b){
 }
 
 my_fun("Dirt_Gravel", "Paved")
-jjjjøpkøk
-bjnkkn
