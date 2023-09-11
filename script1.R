@@ -27,6 +27,11 @@ my_fun <- function(a, b){
 
 my_fun("Dirt_Gravel", "Paved")
 
+
+#group4 learnes ghithub 
+2+2
+#why is this not working?
+
 jjjjøpkøk
 
 bjnkkn
@@ -42,5 +47,15 @@ paste("Hello world")
 #"changes made"
 64+24
 
+
 #isil additions to the branch 
+
 #branch2 sdkbfskdhbcdakhbak isil
+=======
+
+
+Hello_myname_is_MariamReda
+MariamReda_Hello_Universe 
+
+making_change_to_branch_Mariam 
+
