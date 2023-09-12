@@ -1,0 +1,8 @@
+Comments to exam questions, Mari:
+
+What to do:
+- gender_arm should be changed to just arm (gender is already a column)
+- baseline condition should be changed (remove number)
+- the baseline temp_cat have strange categories. Could it be changed into numerical values? 
+
+Categories should be corrected
