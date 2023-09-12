@@ -20,5 +20,5 @@ Ans: Yes, gender_arm variable and baseline_condition, baseline_temp_cat, baselin
 2) Sort the years and patient ids
 3) Improved variable can be changed to TRUE=1, False=0
 4) baseline cavitation can be changed to Yes=1, no=0
-5) Keeping the numbers in the condition variables instead of the text
+5) Keeping the numbers (values rating the answers) in the condition variables instead of the text
 6) 
