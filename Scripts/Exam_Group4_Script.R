@@ -1,9 +1,8 @@
 # INFO ####
 
-# Install packages and load the listed libraries ####
-invisible(install.packages(pacman))
-
-pacman::p_load(ggplot2, tidyverse, here)
+#
+library(tidyverse)
+library(here)
 
 # View your Rproject home directory path ####
 here()
@@ -12,15 +11,32 @@ here()
 df_main <- read_delim(here("data", "exam_data.txt"), delim = "\t")
 df_add <- read_delim(here("data", "exam_data_join.txt"))
 
-# Tidying #### 
+# Explore data ####
+
 head(df_main)
+summary(df_main)
+glimpse(df_main)
+head(df_add)
+skimr::skim(df_main)
 tail(df_main)
-## Separate columns####
+
+## Check for duplications ####
+df_main %>%
+  unique()
+# this does not show any duplicates, but several patients are registered twice (at different times)
+
+
+# Tidy the data ####
+
+# Separate columns that contain different data types ####
+
 # gender_arm: first part contains gender, this is double information and is deleted. Second part stored as variable arm
+
 df_main <- df_main %>%
   separate(col = gender_arm, 
            into = c(NA, "arm"), 
            sep = "_")
+
 
 # baseline_condition: keep the first part, as it is the numeric categorical and is listed in codebook. Shorten variable name baseline to "base", otherwise it will be very long
 df_main <- df_main %>%
@@ -47,7 +63,6 @@ df_main <- df_main %>%
            sep = "_") %>% 
   glimpse()
 
-df_main %>% tail('6m_radiologic')
 
 # 6m_radiologic: split at postition 2 since the description text contains underscores, and change variable names to start with a character 
 df_main <- df_main %>%
