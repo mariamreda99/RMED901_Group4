@@ -111,22 +111,60 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
+
+# Day 6 ####
+
 #Removing the unnecessary columns (year, month, baseline_esr_cat) ####
-#month
-df_monthyear_rm <- subset(df, select = -c(month))
-view(df_monthyear_rm)
+df <- df %>%
+  select(-year, -month, -base_esr_cat)
 
-#year
-df_monthyear_rm <- subset(df_monthyear_rm, select = -c(year))
-view(df_monthyear_rm)
+View(df)
 
-#baseline_esr_cat 
-df_monthyear_rm <- subset(df_monthyear_rm, select = -c(base_esr_cat))
-view(df_monthyear_rm)
+#Create a set of new columns: #####
 
 
+#Changing gender to M=0, F=1 
+df <- df %>% 
+  mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
+
+#Changing F to C 
+install.packages("weathermetrics")
+library (weathermetrics)
+df <- df %>% 
+  mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
 
 
+# a column cutting "baseline_esr" score into quartiles (4 equal parts); HINT: cut() function
+?cut()
+df <- df %>%
+  mutate(base_esr_quartiles = cut(baseline_esr, 4))
+
+df %>%
+  count(base_esr_quartiles) # I used count to see that 4 groups are created
+
+
+# - a column checking whether there was a streptomycin resistance after being given highest dose of
+
+
+
+#Set the order of the columns 
+df %>% 
+  select(patient_id, gender, arm, everything())
+view(df)
+
+#Arranging patient id in an ascending order
+df <- df %>% 
+  arrange(patient_id)
+view(df)
+
+
+# Explore Data
+
+## Summary
+summary(df)
+skimr::skim(df)
+
+## Explore missing values
 
 #Exploring data, instruction line 57:
 #gender
@@ -161,3 +199,7 @@ df %>%
 df %>%
   count(baseline_esr)
 
+
+
+# count()
+# df_main %>% naniar::gg_miss_var()
