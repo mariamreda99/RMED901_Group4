@@ -1,9 +1,8 @@
 # INFO ####
 
-# Install packages and load the listed libraries ####
-invisible(install.packages(pacman))
-
-pacman::p_load(ggplot2, tidyverse, here)
+# Load packages ####
+library(tidyverse)
+library(here)
 
 # View your Rproject home directory path ####
 here()
@@ -12,15 +11,40 @@ here()
 df_main <- read_delim(here("data", "exam_data.txt"), delim = "\t")
 df_add <- read_delim(here("data", "exam_data_join.txt"))
 
-# Tidying #### 
+# Explore data ####
+
 head(df_main)
+summary(df_main)
+glimpse(df_main)
+head(df_add)
+skimr::skim(df_main)
 tail(df_main)
-## Separate columns####
+
+## Check for duplications ####
+df_main %>%
+  unique()
+# this does not show any duplicates, but several patients are registered twice (at different times)
+
+#checking if there are duplications
+#examdata_tidy %>%
+#  count(patient_id, sort = TRUE)
+#?unique
+#unique(examdata_tidy, incomparables = FALSE)
+#duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
+
+# Tidy the data ####
+#changing a column name of column starting with a number, which R does not like
+colnames(df_main)[12] = "X6m_radiologic"
+
+# Separate columns that contain different data types ####
+
 # gender_arm: first part contains gender, this is double information and is deleted. Second part stored as variable arm
+
 df_main <- df_main %>%
   separate(col = gender_arm, 
            into = c(NA, "arm"), 
            sep = "_")
+
 
 # baseline_condition: keep the first part, as it is the numeric categorical and is listed in codebook. Shorten variable name baseline to "base", otherwise it will be very long
 df_main <- df_main %>%
@@ -48,10 +72,9 @@ df_main <- df_main %>%
   glimpse()
 
 
-
 # 6m_radiologic: split at postition 2 since the description text contains underscores, and change variable names to start with a character 
 df_main <- df_main %>%
-  separate(col = '6m_radiologic', 
+  separate(col = X6m_radiologic, 
            into = c("radiologic_6mon_cat", NA, "radiologic_6mon_txt"), 
            sep = c(1,2))
   
@@ -88,6 +111,8 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
+
+# Day 6 ####
 
 #Removing the unnecessary columns (year, month, baseline_esr_cat) ####
 df <- df %>%
@@ -140,6 +165,39 @@ summary(df)
 skimr::skim(df)
 
 ## Explore missing values
+
+#Exploring data, instruction line 57:
+#gender
+df %>%
+  count(gender)
+
+#arm
+df %>%
+  count(arm)
+
+#dose_strep
+df %>%
+  count(`dose_strep [g]`)
+
+#base_condition_cat
+df %>%
+  count(base_condition_cat)
+
+#baseline_temp
+df %>%
+  count(baseline_temp)
+
+#base_temp_cat
+df %>%
+  count(base_temp_cat)
+
+#base_temp_txt
+df %>%
+  count(base_temp_txt)
+
+#baseline_esr
+df %>%
+  count(baseline_esr)
 
 
 
