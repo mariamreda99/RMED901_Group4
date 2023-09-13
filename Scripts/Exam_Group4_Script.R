@@ -111,6 +111,29 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
+#Removing the unnecessary columns (year, month, baseline_esr_cat) ####
+#month
+df <- df
+  df <- subset(df, select = -c(month))
+view(df)
 
-# count()
-# df_main %>% naniar::gg_miss_var()
+#year
+df <- df
+df <- subset(df, select = -c(year))
+view(df)
+
+#baseline_esr_cat 
+df <- df
+df <- subset(df, select = -c(base_esr_cat))
+view(df)
+
+#Changing baseline_cavitation to yes=1, no=0
+
+
+
+#Changining improved to TRUE=1, NO=0 
+
+
+
+#Changing gender to M=0, F=1 
+
