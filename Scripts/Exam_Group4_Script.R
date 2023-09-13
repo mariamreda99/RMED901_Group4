@@ -89,6 +89,15 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 df <- df %>% arrange(-desc(patient_id))
 
 
+#Removing the unnecessary columns (year, month, baseline_esr_cat) ####
+df <- df %>%
+  select(-year, -month, -base_esr_cat)
+
+View(df)
+
+#Create a set of new columns: #####
+
+
 #Changing gender to M=0, F=1 
 df <- df %>% 
   mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
@@ -99,6 +108,20 @@ library (weathermetrics)
 df <- df %>% 
   mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
 
+
+# a column cutting "baseline_esr" score into quartiles (4 equal parts); HINT: cut() function
+?cut()
+df <- df %>%
+  mutate(base_esr_quartiles = cut(baseline_esr, 4))
+
+df %>%
+  count(base_esr_quartiles) # I used count to see that 4 groups are created
+
+
+# - a column checking whether there was a streptomycin resistance after being given highest dose of
+
+
+
 #Set the order of the columns 
 df %>% 
   select(patient_id, gender, arm, everything())
@@ -108,6 +131,17 @@ view(df)
 df <- df %>% 
   arrange(patient_id)
 view(df)
+
+
+# Explore Data
+
+## Summary
+summary(df)
+skimr::skim(df)
+
+## Explore missing values
+
+
 
 # count()
 # df_main %>% naniar::gg_miss_var()
