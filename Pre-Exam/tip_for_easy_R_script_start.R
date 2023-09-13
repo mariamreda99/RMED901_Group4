@@ -9,5 +9,5 @@ invisible(install.packages(pacman))
 # Run pacman to install and load the listed libraries
 pacman::p_load(ggplot2, tidyverse, here)
 
-# View your Rproject home directory
+# View your Rproject home directory path
 here()
