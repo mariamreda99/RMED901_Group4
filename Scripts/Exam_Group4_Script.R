@@ -8,8 +8,7 @@ library(here)
 here()
 
 # Read data ####
-
-df_main <- read_delim(here("data", "exam_data.txt"))
+df_main <- read_delim(here("data", "exam_data.txt"), delim = "\t")
 df_add <- read_delim(here("data", "exam_data_join.txt"))
 
 # Explore data ####
@@ -21,52 +20,89 @@ head(df_add)
 skimr::skim(df_main)
 tail(df_main)
 
+## Check for duplications ####
+df_main %>%
+  unique()
+# this does not show any duplicates, but several patients are registered twice (at different times)
+
+
 # Tidy the data ####
 
 # Separate columns that contain different data types ####
+
+# gender_arm: first part contains gender, this is double information and is deleted. Second part stored as variable arm
 
 df_main <- df_main %>%
   separate(col = gender_arm, 
            into = c(NA, "arm"), 
            sep = "_")
-## change the column gender_arm to contain only arm 
 
 
+# baseline_condition: keep the first part, as it is the numeric categorical and is listed in codebook. Shorten variable name baseline to "base", otherwise it will be very long
 df_main <- df_main %>%
   separate(col = baseline_condition, 
-           into = c("basline_condition_score", "baseline_condition_txt"), 
+           into = c("base_condition_cat", NA), 
            sep = "_")
-# Divided the column baseline condition into one for the text and one for the score
 
+# baseline_temp_cat: levels are not explicitly listed in codebook, keep both parts of variable after splitting into category level and text description.
 df_main <- df_main %>%
   separate(col = baseline_temp_cat, 
-           into = c("baseline_temp_cat", "baseline_temp"), 
-           sep = "_")
-# did the same for baseline temp 
+           into = c("base_temp_cat", "base_temp_txt"), 
+           sep = "_") %>% glimpse()
 
+# baseline_esr_cat: levels are not explicitly listed in codebook, keep both parts of variable after splitting into category level and text description.
 df_main <- df_main %>%
   separate(col = baseline_esr_cat, 
-           into = c("baseline_esr_cat", "baseline_esr"), 
-           sep = "_")
-# and for esr
+           into = c("base_esr_cat", "base_esr_txt"), 
+           sep = "_") %>% glimpse()
 
+# strep_resistance: levels are not explicitly listed in codebook, keep both parts of variable after splitting into category level and text description.
 df_main <- df_main %>%
   separate(col = strep_resistance, 
-           into = c("strep_resistance_cat", "strep_resistance", "strep_resistance_nr" ), 
-           sep = "_")
-# changed the strep_resistance into 3 columns 
+           into = c("strep_resistance_cat", "strep_resistance_txt", "strep_resistance_range"), 
+           sep = "_") %>% 
+  glimpse()
 
-df_main %>%
-  count(df_main$strep_resistance)
-# check if it looks right
- 
+
+# 6m_radiologic: split at postition 2 since the description text contains underscores, and change variable names to start with a character 
 df_main <- df_main %>%
-  separate(col = '6m_radiologic',
-           into = c(NA, "radiologic_6m_responce"), 
-           sep = 2) 
-# removed number in front of radiological responce and changed name of column to avoid number as name. The radiological responce numeric score already exist
+  separate(col = '6m_radiologic', 
+           into = c("radiologic_6mon_cat", NA, "radiologic_6mon_txt"), 
+           sep = c(1,2))
+  
+# Do something with baseline_cavitation?
+# baseline_cavitation: make new variable base_cavitation that reflects the codebook
+df_main <- df_main %>% 
+  mutate(base_cavitation = case_when(
+              baseline_cavitation == "yes" ~ 1,
+              baseline_cavitation == "no" ~ 2))
+glimpse(df_main)
 
-## Check for duplications ####
-df_main %>%
-  unique()
-# this does not show any duplicates, but several patients are registered twice (at different times)
+# Relocate base_cavitation to before baseline_cavitation to conserve the system
+df_main <- df_main %>% relocate(base_cavitation, .before = baseline_cavitation)
+
+# Rename baseline_cavitation
+df_main <- df_main %>% rename(base_cavitation_txt = baseline_cavitation )
+
+## Unique ####
+# Dataset df_main is unique
+df_main %>% unique()
+
+# But some patients have several treatments
+# N patient id = 107 
+# N observations = 141
+df_main %>% summarise(max(patient_id))
+df_main <- df_main %>% arrange(-desc(patient_id))
+
+## Join datasets ####
+df <- full_join(df_main, df_add, by = "patient_id")
+
+# Reorder added variables to be grouped with the categorical data
+df <- df %>% relocate(baseline_temp, .before = base_temp_cat)
+df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
+# Order dataset observations by patient_id
+df <- df %>% arrange(-desc(patient_id))
+
+
+# count()
+# df_main %>% naniar::gg_miss_var()
