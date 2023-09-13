@@ -1,4 +1,4 @@
-# INFO ####
+# EXAM Group 4 ####
 
 #
 library(tidyverse)
@@ -26,11 +26,11 @@ df_main %>%
 # this does not show any duplicates, but several patients are registered twice (at different times)
 
 #checking if there are duplications
-examdata_tidy %>%
+df_main %>%
   count(patient_id, sort = TRUE)
 ?unique
-unique(examdata_tidy, incomparables = FALSE)
-duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
+unique(df_main, incomparables = FALSE)
+duplicated(df_main, incomparables = FALSE, fromLast = FALSE)
 
 # Tidy the data ####
 #changing a column name of column starting with a number, which R does not like
@@ -108,21 +108,22 @@ df <- full_join(df_main, df_add, by = "patient_id")
 # Reorder added variables to be grouped with the categorical data
 df <- df %>% relocate(baseline_temp, .before = base_temp_cat)
 df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
+
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
 #Removing the unnecessary columns (year, month, baseline_esr_cat) ####
-#month
-df <- df
+#Removing month
+df <- df %>%
   df <- subset(df, select = -c(month))
 view(df)
 
-#year
+#Removing year
 df <- df
 df <- subset(df, select = -c(year))
 view(df)
 
-#baseline_esr_cat 
+#Removing baseline_esr_cat 
 df <- df
 df <- subset(df, select = -c(base_esr_cat))
 view(df)
