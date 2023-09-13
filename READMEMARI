@@ -5,4 +5,11 @@ What to do:
 - baseline condition should be changed (remove number)
 - the baseline temp_cat have strange categories. Could it be changed into numerical values? 
 
+Some patients are registered several times, only thing that differs is the inclusion time. Are these duplicates?
+
+This study is from 1948 so the year must be wrong
+
 Categories should be corrected
+
+Suggestion: to create a subset with only the most relevant columns, excluding month and year and then remove the duplicates
+
