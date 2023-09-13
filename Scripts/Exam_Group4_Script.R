@@ -112,23 +112,38 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
+view(df)
+
 #Removing the unnecessary columns (year, month, baseline_esr_cat) ####
-#Removing month
 df <- df %>%
-  df <- subset(df, select = -c(month))
-view(df)
+  select(-year, -month, -base_esr_cat)
 
-#Removing year
-df <- df
-df <- subset(df, select = -c(year))
-view(df)
+View(df)
 
-#Removing baseline_esr_cat 
-df <- df
-df <- subset(df, select = -c(base_esr_cat))
-view(df)
+#Create a set of new columns: #####
 
-#Changing baseline_cavitation to yes=1, no=0
+ # - a column showing gender as "0" or "1" instead of "F" or "M"
+
+
+
+#- a column showing baseline temperature in Celsius
+
+
+
+# a column cutting "baseline_esr" score into quartiles (4 equal parts); HINT: cut() function
+?cut()
+df <- df %>%
+  mutate(base_esr_quartiles = cut(baseline_esr, 4))
+
+df %>%
+  count(base_esr_quartiles)
+## I used count to that 4 groups are created
+
+
+#a column checking whether there was a streptomycin resistance after being given highest dose of
+
+
+# baseline_cavitation to yes=1, no=0
 
 
 
@@ -138,3 +153,14 @@ view(df)
 
 #Changing gender to M=0, F=1 
 
+# Explore Data
+
+## Summary
+summary(df)
+skimr::skim(df)
+
+## Explore missing values
+
+
+
+         
