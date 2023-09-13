@@ -21,4 +21,4 @@ Ans: Yes, gender_arm variable and baseline_condition, baseline_temp_cat, baselin
 3) Improved variable can be changed to TRUE=1, False=0
 4) baseline cavitation can be changed to Yes=1, no=0
 5) Keeping the numbers (values rating the answers) in the condition variables instead of the text
-6) 
+6) Removing the number from the variable 6m_radiologic at the beginning 
