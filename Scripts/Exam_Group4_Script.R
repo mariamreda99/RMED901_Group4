@@ -146,9 +146,3 @@ view(df)
 df <- df %>% 
   arrange(patient_id)
 view(df)
-
-#Stratify your data by a categorical column
-df <- df %>% 
-  group_by(base_condition_cat)
-  summarise(max(baseline_temp_C, na.rm = T), min(baseline_temp_C, na.rm = T))
-  
