@@ -25,8 +25,16 @@ df_main %>%
   unique()
 # this does not show any duplicates, but several patients are registered twice (at different times)
 
+#checking if there are duplications
+examdata_tidy %>%
+  count(patient_id, sort = TRUE)
+?unique
+unique(examdata_tidy, incomparables = FALSE)
+duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
 
 # Tidy the data ####
+#changing a column name of column starting with a number, which R does not like
+colnames(df_main)[12] = "X6m_radiologic"
 
 # Separate columns that contain different data types ####
 
@@ -66,7 +74,7 @@ df_main <- df_main %>%
 
 # 6m_radiologic: split at postition 2 since the description text contains underscores, and change variable names to start with a character 
 df_main <- df_main %>%
-  separate(col = '6m_radiologic', 
+  separate(col = X6m_radiologic, 
            into = c("radiologic_6mon_cat", NA, "radiologic_6mon_txt"), 
            sep = c(1,2))
   
