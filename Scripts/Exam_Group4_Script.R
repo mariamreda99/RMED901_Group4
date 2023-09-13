@@ -127,13 +127,23 @@ df <- df
 df <- subset(df, select = -c(base_esr_cat))
 view(df)
 
-#Changing baseline_cavitation to yes=1, no=0
-
-
-
-#Changining improved to TRUE=1, NO=0 
-
-
 
 #Changing gender to M=0, F=1 
+df <- df %>% 
+  mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
+
+#Changing F to C 
+library (weathermetrics)
+df <- df %>% 
+  mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
+
+#Set the order of the columns 
+df %>% 
+  select(patient_id, gender, arm, everything())
+view(df)
+
+#Arranging patient id in an ascending order
+df <- df %>% 
+  arrange(patient_id)
+view(df)
 
