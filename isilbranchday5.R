@@ -1,7 +1,8 @@
 exam_data <- read.delim("~/PhD isil/RMED901/RMED901_Group4/DATA/exam_data.txt")
 View(exam_data)
 here()
-view(exam_data)
+library(tidyr)
+View(exam_data)
 summarise(exam_data)
 glimpse(exam_data)
 here()
@@ -16,7 +17,7 @@ examdata_tidy <-
            into= c(NA, "arm"),
            sep = "_" )
 
-view(examdata_tidy)
+View(examdata_tidy)
 
 examdata_tidy %>%
   count(patient_id)
@@ -60,3 +61,6 @@ examdata_titlenames_tidy <-
   separate(col = "X6m_radiologic",
            into= c("X6m_radiologic", NA, NA),
            sep = "_" )
+
+#changing a column name
+colnames(examdata_titlenames_tidy)[12] = "X6m_radiologic"
