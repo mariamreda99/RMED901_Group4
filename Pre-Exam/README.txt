@@ -43,15 +43,3 @@ X6m_radiologic:
 no
 1_sens_0-8
 5_Moderate_improvement
-5
-TRUE
-3
-3
-11
-2009
-F
-F_Control
-0
-1_Good
-1_98-98.9F
-3_21-50
