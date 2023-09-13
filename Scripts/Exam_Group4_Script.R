@@ -85,6 +85,7 @@ df <- full_join(df_main, df_add, by = "patient_id")
 # Reorder added variables to be grouped with the categorical data
 df <- df %>% relocate(baseline_temp, .before = base_temp_cat)
 df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
+# Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
 
