@@ -26,11 +26,11 @@ df_main %>%
 # this does not show any duplicates, but several patients are registered twice (at different times)
 
 #checking if there are duplications
-examdata_tidy %>%
-  count(patient_id, sort = TRUE)
-?unique
-unique(examdata_tidy, incomparables = FALSE)
-duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
+#examdata_tidy %>%
+#  count(patient_id, sort = TRUE)
+#?unique
+#unique(examdata_tidy, incomparables = FALSE)
+#duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
 
 # Tidy the data ####
 #changing a column name of column starting with a number, which R does not like
@@ -113,27 +113,51 @@ df <- df %>% arrange(-desc(patient_id))
 
 #Removing the unnecessary columns (year, month, baseline_esr_cat) ####
 #month
-df <- df
-  df <- subset(df, select = -c(month))
-view(df)
+df_monthyear_rm <- subset(df, select = -c(month))
+view(df_monthyear_rm)
 
 #year
-df <- df
-df <- subset(df, select = -c(year))
-view(df)
+df_monthyear_rm <- subset(df_monthyear_rm, select = -c(year))
+view(df_monthyear_rm)
 
 #baseline_esr_cat 
-df <- df
-df <- subset(df, select = -c(base_esr_cat))
-view(df)
-
-#Changing baseline_cavitation to yes=1, no=0
+df_monthyear_rm <- subset(df_monthyear_rm, select = -c(base_esr_cat))
+view(df_monthyear_rm)
 
 
 
-#Changining improved to TRUE=1, NO=0 
 
 
+#Exploring data, instruction line 57:
+#gender
+df %>%
+  count(gender)
 
-#Changing gender to M=0, F=1 
+#arm
+df %>%
+  count(arm)
+
+#dose_strep
+df %>%
+  count(`dose_strep [g]`)
+
+#base_condition_cat
+df %>%
+  count(base_condition_cat)
+
+#baseline_temp
+df %>%
+  count(baseline_temp)
+
+#base_temp_cat
+df %>%
+  count(base_temp_cat)
+
+#base_temp_txt
+df %>%
+  count(base_temp_txt)
+
+#baseline_esr
+df %>%
+  count(baseline_esr)
 
