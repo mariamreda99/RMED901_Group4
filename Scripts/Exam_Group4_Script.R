@@ -105,6 +105,9 @@ df_main <- df_main %>% arrange(-desc(patient_id))
 ## Join datasets ####
 df <- full_join(df_main, df_add, by = "patient_id")
 
+# Remove objects used in merge
+rm(df_add, df_main)
+
 # Reorder added variables to be grouped with the categorical data
 df <- df %>% relocate(baseline_temp, .before = base_temp_cat)
 df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
@@ -112,21 +115,27 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
+# Bentes code: 
+# line 48: Make necessary changes in variable types
+# Use glimpse to see variable types
+glimpse(df)
+# Does not find variable types that need to be changed
+
+# Make code to change the categorical variables stored as data type character into numeric
+df %>% 
+  mutate(base_condition_cat = as.numeric(base_condition_cat),
+         base_cavitation = as.numeric(base_cavitation),
+         strep_resistance_cat = as.numeric(strep_resistance_cat),
+         radiologic_6mon_cat = as.numeric(radiologic_6mon_cat))
+  
+  
 #Removing the unnecessary columns (year, month, baseline_esr_cat) ####
 #Removing month
-df <- df %>%
-  df <- subset(df, select = -c(month))
+df <- df %<%
+  subset(df, select = -c(month, year, base_esr_cat))
 view(df)
+glimpse(df)
 
-#Removing year
-df <- df
-df <- subset(df, select = -c(year))
-view(df)
-
-#Removing baseline_esr_cat 
-df <- df
-df <- subset(df, select = -c(base_esr_cat))
-view(df)
 
 #Changing baseline_cavitation to yes=1, no=0
 
@@ -137,4 +146,27 @@ view(df)
 
 
 #Changing gender to M=0, F=1 
+
+
+# line 53:  a column checking whether there was a streptomycin resistance after being given highest dose of streptomycin
+# rename 
+df <- df %>% 
+  rename(dose_strep_g = `dose_strep [g]`)
+
+df %>% 
+  summarize(max(dose_strep_g))
+  
+df %>% 
+  count(dose_strep_g)
+
+df <- df %>% 
+  mutate(strep_res_developed = case_when(
+                                dose_strep_g == 2 & strep_resistance_cat == 3 ~ "yes",
+                                TRUE ~ "no")) 
+# Check if correct 
+df %>% 
+  count(strep_res_developed, strep_resistance_cat)
+
+  
+
 
