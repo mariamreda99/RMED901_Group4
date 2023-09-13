@@ -5,3 +5,53 @@
 # Purpose: Group project for evaluating progress of learning output using R, package tidyverse and coworking by shared GitHub repository
 =======
 testing groupwork
+
+____ISIL____
+tidied the data
+checked for duplicates
+changed the columns that include both the category number and the explanation of the category, further info:
+
+CATEGORIES:
+baseline condition:
+1= Good
+2= Fair
+3= Poor
+
+baseline_temp_cat:
+1= 98-98.9F
+2= 99-99.9F
+3= 100-100.9F
+4= 101F+
+
+baseline_esr_cat:
+2= 11-20
+3= 21-50
+4= 51+
+
+strep_resistance:
+1= sens 0-8
+2= mod 8-99
+3= resist 100+
+
+X6m_radiologic:
+1= Death
+2= Considerable deterioration
+3= Moderate deterioration
+4= No change
+5= Moderate improvement
+6= Considerable improvement
+no
+1_sens_0-8
+5_Moderate_improvement
+5
+TRUE
+3
+3
+11
+2009
+F
+F_Control
+0
+1_Good
+1_98-98.9F
+3_21-50
