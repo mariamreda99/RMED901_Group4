@@ -40,6 +40,3 @@ X6m_radiologic:
 4= No change
 5= Moderate improvement
 6= Considerable improvement
-no
-1_sens_0-8
-5_Moderate_improvement
