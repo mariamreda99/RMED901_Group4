@@ -47,7 +47,7 @@ df_main <- df_main %>%
            sep = "_") %>% 
   glimpse()
 
-df_main %>% tail('6m_radiologic')
+
 
 # 6m_radiologic: split at postition 2 since the description text contains underscores, and change variable names to start with a character 
 df_main <- df_main %>%
