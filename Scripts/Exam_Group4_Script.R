@@ -89,5 +89,25 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 df <- df %>% arrange(-desc(patient_id))
 
 
+#Changing gender to M=0, F=1 
+df <- df %>% 
+  mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
+
+#Changing F to C 
+install.packages("weathermetrics")
+library (weathermetrics)
+df <- df %>% 
+  mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
+
+#Set the order of the columns 
+df %>% 
+  select(patient_id, gender, arm, everything())
+view(df)
+
+#Arranging patient id in an ascending order
+df <- df %>% 
+  arrange(patient_id)
+view(df)
+
 # count()
 # df_main %>% naniar::gg_miss_var()
