@@ -116,13 +116,12 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
-# Line 46: Removing the unnecessary columns (year, month, baseline_esr_cat) ####
+# Task line  46: Removing the unnecessary columns (year, month, baseline_esr_cat) ####
 df <- df %>%
   select(-year, -month, -base_esr_cat)
 
-View(df)
 
-# Line 48: #### 
+# Task line  48: #### 
 # Make necessary changes in variable types
 # Use glimpse to see variable types
 glimpse(df)
@@ -135,22 +134,22 @@ df %>%
          strep_resistance_cat = as.numeric(strep_resistance_cat),
          radiologic_6mon_cat = as.numeric(radiologic_6mon_cat))
  
-## Line 49 ####
+## Task line  49 ####
 # Create a set of new columns: #####
 
-### Line 50 ####
+### Task line  50 ####
 #Changing gender to M=0, F=1 
 df <- df %>% 
   mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
 
-### Line 51 ####
+### Task line  51 ####
 #Changing F to C 
 install.packages("weathermetrics")
 library (weathermetrics)
 df <- df %>% 
   mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
 
-### Line 52 ####
+### Task line  52 ####
 # a column cutting "baseline_esr" score into quartiles (4 equal parts); HINT: cut() function
 ?cut()
 df <- df %>%
@@ -159,7 +158,7 @@ df <- df %>%
 df %>%
   count(base_esr_quartiles) # I used count to see that 4 groups are created
 
-### Line 53: Strep resistance ####
+### Task line  53: Strep resistance ####
 # Make a column checking whether there was a streptomycin resistance after being given highest dose of streptomycin
 # rename column containing space 
 df <- df %>% 
@@ -179,22 +178,22 @@ df <- df %>%
 df %>% 
   count(strep_res_developed, strep_resistance_cat)
 
-## Line 54 ####
+## Task line  54 ####
 #Set the order of the columns 
 df %>% 
   select(patient_id, gender, arm, everything())
 view(df)
 
-## Line 55 ####
+## Task line  55 ####
 #Arranging patient id in an ascending order
 df <- df %>% 
   arrange(patient_id)
 view(df)
 
-## Missing : Line 56 ####
+## Missing : Task line  56 ####
 # Connect above steps with a pipe (copy-paste)
 
-# Line 57: Exploring data ####
+# Task line  57: Exploring data ####
 
 ## Summary ####
 summary(df)
@@ -232,6 +231,14 @@ df %>%
 df %>%
   count(baseline_esr)
 
-## Line 58: Explore and comment missing values ####
+## Task line  58: Explore and comment missing values ####
 df %>% naniar::gg_miss_var()
+
+## Task line 59: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column. ####
+## Task line 60: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe! ####
+### Task line 61: Only for persons with baseline condition 'Fair' ####
+### Task line 62: Only for females####
+### Task line 63: Only for persons with baseline temperature 100-100.9F ####
+### Task line 64: Only for persons that developed resistance to streptomycin####
+## Task line 65: Use two categorical columns in your dataset to create a table (hint: ?count)####
 
