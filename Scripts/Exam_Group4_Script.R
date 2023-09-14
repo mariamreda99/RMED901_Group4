@@ -134,8 +134,7 @@ df %>%
          strep_resistance_cat = as.numeric(strep_resistance_cat),
          radiologic_6mon_cat = as.numeric(radiologic_6mon_cat))
  
-## Task line  49 ####
-# Create a set of new columns: #####
+## Task line  49: Create a set of new columns: #####
 
 ### Task line  50 ####
 #Changing gender to M=0, F=1 
@@ -235,10 +234,27 @@ df %>%
 df %>% naniar::gg_miss_var()
 
 ## Task line 59: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column. ####
+
 ## Task line 60: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe! ####
+
 ### Task line 61: Only for persons with baseline condition 'Fair' ####
+
 ### Task line 62: Only for females####
+
 ### Task line 63: Only for persons with baseline temperature 100-100.9F ####
+
 ### Task line 64: Only for persons that developed resistance to streptomycin####
+
 ## Task line 65: Use two categorical columns in your dataset to create a table (hint: ?count)####
 
+# Day 7: Create plots that would help answer these questions: ####
+
+## Task line 70: Are there any correlated measurements? ####
+
+## Task line 71: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `gender`? ####
+
+## Task line 72: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `baseline_temp`? ####
+
+## Task line 73: Do erythrocyte sedimentation rate in mm per hour at baseline and baseline temperature have a linear relationship? ####
+
+## Task line 74: Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline? ####
