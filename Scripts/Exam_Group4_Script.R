@@ -230,7 +230,6 @@ df %>%
 df %>%
   count(baseline_esr)
 
-#___________#DAY7___________________________________
 #continuing line 57, explore data
 df %>%
   count(gender, arm, dose_strep_g, base_condition_cat, base_temp_txt, baseline_esr) %>%
@@ -243,7 +242,6 @@ summary(df)
 names(df)
 tail(df$baseline_esr)
 head(df$base_cavitation_txt)
-#__________________end of task line 57______________________
 
 ## Task line  58: Explore and comment missing values ####
 df %>% naniar::gg_miss_var()
