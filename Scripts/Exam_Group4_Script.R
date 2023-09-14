@@ -128,9 +128,10 @@ glimpse(df)
 # Do not find variable types that need to be changed
 
 # Make code to change the categorical variables stored as data type character into numeric
-df %>% 
+df <- df %>% 
   mutate(base_condition_cat = as.numeric(base_condition_cat),
          base_cavitation = as.numeric(base_cavitation),
+         base_temp_cat = as.numeric(base_temp_cat),
          strep_resistance_cat = as.numeric(strep_resistance_cat),
          radiologic_6mon_cat = as.numeric(radiologic_6mon_cat))
  
@@ -235,15 +236,55 @@ df %>% naniar::gg_miss_var()
 
 ## Task line 59: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column. ####
 
+df %>%
+  group_by(gender) %>%
+  summarise(min(baseline_esr, na.rm = T), max(baseline_esr, na.rm =T), mean(baseline_esr, na.rm = T), sd(baseline_esr, na.rm = T))
+### I chose gender as the categorical value and baseline_esr as the numeric
+
+
 ## Task line 60: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe! ####
 
+
+
 ### Task line 61: Only for persons with baseline condition 'Fair' ####
+df %>%
+  group_by(gender) %>%
+  filter(base_condition_cat == 2) %>%
+  summarise(min(baseline_esr, na.rm = T),
+            max(baseline_esr, na.rm =T), 
+            mean(baseline_esr, na.rm = T), 
+            sd(baseline_esr, na.rm = T))
+#### baseline condition fair = 2
+
 
 ### Task line 62: Only for females####
+df %>%
+  group_by(improved) %>%
+  filter(gender == "F") %>%
+  summarise(min(baseline_esr, na.rm = T), 
+            max(baseline_esr, na.rm = T), 
+            mean(baseline_esr, na.rm = T), 
+            sd(baseline_esr, na.rm = T))
+
 
 ### Task line 63: Only for persons with baseline temperature 100-100.9F ####
+df %>%
+  group_by(gender) %>%
+  filter(base_temp_txt == "100-100.9F") %>%
+  summarise(min(baseline_esr, na.rm = T), 
+            max(baseline_esr, na.rm = T), 
+            mean(baseline_esr, na.rm = T), 
+            sd(baseline_esr, na.rm = T))
+
 
 ### Task line 64: Only for persons that developed resistance to streptomycin####
+df %>%
+  group_by(gender) %>%
+  filter(strep_res_developed == "yes") %>%
+  summarise(min(baseline_esr, na.rm = T), 
+            max(baseline_esr, na.rm = T), 
+            mean(baseline_esr, na.rm = T), 
+            sd(baseline_esr, na.rm = T))
 
 ## Task line 65: Use two categorical columns in your dataset to create a table (hint: ?count)####
 
@@ -256,5 +297,30 @@ df %>% naniar::gg_miss_var()
 ## Task line 72: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `baseline_temp`? ####
 
 ## Task line 73: Do erythrocyte sedimentation rate in mm per hour at baseline and baseline temperature have a linear relationship? ####
+ggplot(df) +
+  aes( x = log(baseline_esr), 
+       y = baseline_temp_C
+       ) +
+  geom_point() +
+  geom_smooth()
+
+ggplot(df) +
+  aes( x = baseline_esr, 
+       y = baseline_temp_C
+  ) +
+  geom_point(aes(color = improved, shape = arm)) + 
+  geom_smooth(method = "lm",
+              se = FALSE,
+              aes(color = improved))
+
+ggplot(df) +
+  aes(  x = baseline_esr, 
+        y = baseline_temp_C,
+       ) +
+  geom_point(aes(color = arm)) +
+  geom_smooth() +
+  facet_grid(rows = vars(improved))
+  
+
 
 ## Task line 74: Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline? ####
