@@ -128,8 +128,10 @@ glimpse(df)
 # Do not find variable types that need to be changed
 
 # Make code to change the categorical variables stored as data type character into numeric
-df %>% 
+#why i chaged: we didnt assign the code below to df, so it didn't save changes to our df object!
+df <- df %>% 
   mutate(base_condition_cat = as.numeric(base_condition_cat),
+         base_temp_cat = as.numeric(base_temp_cat),
          base_cavitation = as.numeric(base_cavitation),
          strep_resistance_cat = as.numeric(strep_resistance_cat),
          radiologic_6mon_cat = as.numeric(radiologic_6mon_cat))
