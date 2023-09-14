@@ -145,7 +145,7 @@ df <- df %>%
 
 ### Task line  51 ####
 #Changing F to C 
-install.packages("weathermetrics")
+#install.packages("weathermetrics")
 library (weathermetrics)
 df <- df %>% 
   mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
@@ -263,14 +263,37 @@ df %>% naniar::gg_miss_var()
 ### Task line 64: Only for persons that developed resistance to streptomycin####
 
 ## Task line 65: Use two categorical columns in your dataset to create a table (hint: ?count)####
+df %>%
+  count(strep_resistance_cat, radiologic_6mon_cat)%>%
+  view()
 
+df %>%
+  count(base_condition_cat, base_temp_cat)%>%
+  view()
 # Day 7: Create plots that would help answer these questions: ####
 
 ## Task line 70: Are there any correlated measurements? ####
 
 ## Task line 71: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `gender`? ####
+plot71 <- ggplot(data = df) +
+  aes( x = gender,
+       y= baseline_esr) +
+  geom_boxplot()
+plot71
+
+# Answer= no, it does not depend on gender.
 
 ## Task line 72: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `baseline_temp`? ####
+plot72 <- ggplot(data = df) +
+  aes( x= baseline_temp,
+       y = baseline_esr) +
+  geom_point(
+             size=2) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE)
+plot72
+#yes, it depends on baseline_temp. There is a positive correlation.
 
 ## Task line 73: Do erythrocyte sedimentation rate in mm per hour at baseline and baseline temperature have a linear relationship? ####
 
