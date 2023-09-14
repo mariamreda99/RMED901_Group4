@@ -128,7 +128,7 @@ glimpse(df)
 # Do not find variable types that need to be changed
 
 # Make code to change the categorical variables stored as data type character into numeric
-df %>% 
+df <- df %>% 
   mutate(base_condition_cat = as.numeric(base_condition_cat),
          base_cavitation = as.numeric(base_cavitation),
          strep_resistance_cat = as.numeric(strep_resistance_cat),
@@ -181,13 +181,11 @@ df %>%
 #Set the order of the columns 
 df %>% 
   select(patient_id, gender, arm, everything())
-view(df)
 
 ## Task line  55 ####
 #Arranging patient id in an ascending order
 df <- df %>% 
   arrange(patient_id)
-view(df)
 
 ## Missing : Task line  56 ####
 # Connect above steps with a pipe (copy-paste)
@@ -249,8 +247,39 @@ df %>% naniar::gg_miss_var()
 
 # Day 7: Create plots that would help answer these questions: ####
 
+library("ggplot2")
+library("patchwork")
 ## Task line 70: Are there any correlated measurements? ####
+# Variables of interest: patient_id 	arm 	dose_strep [g] 	base_condition_cat	baseline_esr_cat 	base_cavitation_txt	strep_resistance_cat	radiologic_6mon_cat	Gender_numeric	baseline_temp_C	strep_res_developed
 
+# Baseline esr and temp
+# Not correlated
+ggplot(df) +
+  aes(x = baseline_esr, y = baseline_temp_C) +
+         geom_point(aes(color = as.factor(Gender_Numeric)))
+
+# Baseline esr and base_condition_cat
+# Correlated
+ggplot(df) +
+  aes(x = baseline_esr, y = baseline_temp_C) +
+  geom_point(aes(color = as.factor(Gender_Numeric))) +
+  facet_grid(cols = vars(base_condition_cat), rows = vars(Gender_Numeric)) + 
+  theme_minimal()
+
+ggplot(df) +
+  aes(x = baseline_esr, y = baseline_temp_C) +
+  geom_col(aes(fill = as.factor(Gender_Numeric))) +
+  facet_grid(cols = vars(base_condition_cat), rows = vars(Gender_Numeric)) +
+  theme_minimal()
+
+ggplot(df) +
+  aes(x = baseline_esr, y = baseline_temp_C) +
+  geom_col(aes(fill = as.factor(Gender_Numeric))) +
+  facet_grid(cols = vars(base_condition_cat), rows = vars(base_cavitation_txt)) +
+  theme_minimal()
+  
+
+glimpse(df)
 ## Task line 71: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `gender`? ####
 
 ## Task line 72: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `baseline_temp`? ####
@@ -258,3 +287,22 @@ df %>% naniar::gg_miss_var()
 ## Task line 73: Do erythrocyte sedimentation rate in mm per hour at baseline and baseline temperature have a linear relationship? ####
 
 ## Task line 74: Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline? ####
+ggplot(df) +
+  aes(x = radiologic_6mon_cat, y = baseline_esr) +
+  geom_point(aes(colour = as.factor(Gender_Numeric))) +
+  geom_smooth(method = "lm") +
+  facet_wrap(facets = vars(Gender_Numeric)) +
+  labs(fill = "Gender") +
+  theme_classic()
+
+ggplot(df) +
+  aes(x = radiologic_6mon_cat, y = baseline_esr) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  labs(title = "Low ESR at baseline implicates better Likert radiologic score at 6 months",
+       caption = "ESR = erythrocyte sedimentation rate, in mm per hour at baseline") +
+       ylab("ESR in mm / hour") +
+       xlab("Likert radiologic score at 6 months") +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6))
+
