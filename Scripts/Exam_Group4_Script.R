@@ -130,6 +130,7 @@ glimpse(df)
 # Make code to change the categorical variables stored as data type character into numeric
 df <- df %>% 
   mutate(base_condition_cat = as.numeric(base_condition_cat),
+         base_temp_cat = as.numeric(base_temp_cat),
          base_cavitation = as.numeric(base_cavitation),
          base_temp_cat = as.numeric(base_temp_cat),
          strep_resistance_cat = as.numeric(strep_resistance_cat),
@@ -144,7 +145,7 @@ df <- df %>%
 
 ### Task line  51 ####
 #Changing F to C 
-install.packages("weathermetrics")
+#install.packages("weathermetrics")
 library (weathermetrics)
 df <- df %>% 
   mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
@@ -229,6 +230,21 @@ df %>%
 df %>%
   count(baseline_esr)
 
+#___________#DAY7___________________________________
+#continuing line 57, explore data
+df %>%
+  count(gender, arm, dose_strep_g, base_condition_cat, base_temp_txt, baseline_esr) %>%
+  view()
+df %>%
+  select(gender, arm, dose_strep_g, strep_resistance_txt, base_cavitation_txt,
+         radiologic_6mon_txt, strep_res_developed)%>%
+  view()
+summary(df)
+names(df)
+tail(df$baseline_esr)
+head(df$base_cavitation_txt)
+#__________________end of task line 57______________________
+
 ## Task line  58: Explore and comment missing values ####
 df %>% naniar::gg_miss_var()
 
@@ -285,7 +301,13 @@ df %>%
             sd(baseline_esr, na.rm = T))
 
 ## Task line 65: Use two categorical columns in your dataset to create a table (hint: ?count)####
+df %>%
+  count(strep_resistance_cat, radiologic_6mon_cat)%>%
+  view()
 
+df %>%
+  count(base_condition_cat, base_temp_cat)%>%
+  view()
 # Day 7: Create plots that would help answer these questions: ####
 
 library("ggplot2")
@@ -322,8 +344,25 @@ ggplot(df) +
 
 glimpse(df)
 ## Task line 71: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `gender`? ####
+plot71 <- ggplot(data = df) +
+  aes( x = gender,
+       y= baseline_esr) +
+  geom_boxplot()
+plot71
+
+# Answer= no, it does not depend on gender.
 
 ## Task line 72: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `baseline_temp`? ####
+plot72 <- ggplot(data = df) +
+  aes( x= baseline_temp,
+       y = baseline_esr) +
+  geom_point(
+             size=2) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE)
+plot72
+#yes, it depends on baseline_temp. There is a positive correlation.
 
 ## Task line 73: Do erythrocyte sedimentation rate in mm per hour at baseline and baseline temperature have a linear relationship? ####
 ggplot(df) +
