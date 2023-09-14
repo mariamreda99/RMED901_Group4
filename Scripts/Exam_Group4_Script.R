@@ -357,8 +357,7 @@ plot72 <- ggplot(data = df) +
   geom_point(
              size=2) +
   geom_smooth(
-    method = "lm",
-    se = FALSE)
+    method = "lm")
 plot72
 #yes, it depends on baseline_temp. There is a positive correlation.
 
