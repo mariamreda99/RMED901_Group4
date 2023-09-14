@@ -1,9 +1,8 @@
 # INFO ####
 
-# Install packages and load the listed libraries ####
-invisible(install.packages(pacman))
-
-pacman::p_load(ggplot2, tidyverse, here)
+# Load packages ####
+library(tidyverse)
+library(here)
 
 # View your Rproject home directory path ####
 here()
@@ -12,15 +11,40 @@ here()
 df_main <- read_delim(here("data", "exam_data.txt"), delim = "\t")
 df_add <- read_delim(here("data", "exam_data_join.txt"))
 
-# Tidying #### 
+# Explore data ####
+
 head(df_main)
+summary(df_main)
+glimpse(df_main)
+head(df_add)
+skimr::skim(df_main)
 tail(df_main)
-## Separate columns####
+
+## Check for duplications ####
+df_main %>%
+  unique()
+# this does not show any duplicates, but several patients are registered twice (at different times)
+
+#checking if there are duplications
+#examdata_tidy %>%
+#  count(patient_id, sort = TRUE)
+#?unique
+#unique(examdata_tidy, incomparables = FALSE)
+#duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
+
+# Tidy the data ####
+#changing a column name of column starting with a number, which R does not like
+colnames(df_main)[12] = "X6m_radiologic"
+
+# Separate columns that contain different data types ####
+
 # gender_arm: first part contains gender, this is double information and is deleted. Second part stored as variable arm
+
 df_main <- df_main %>%
   separate(col = gender_arm, 
            into = c(NA, "arm"), 
            sep = "_")
+
 
 # baseline_condition: keep the first part, as it is the numeric categorical and is listed in codebook. Shorten variable name baseline to "base", otherwise it will be very long
 df_main <- df_main %>%
@@ -48,10 +72,9 @@ df_main <- df_main %>%
   glimpse()
 
 
-
 # 6m_radiologic: split at postition 2 since the description text contains underscores, and change variable names to start with a character 
 df_main <- df_main %>%
-  separate(col = '6m_radiologic', 
+  separate(col = X6m_radiologic, 
            into = c("radiologic_6mon_cat", NA, "radiologic_6mon_txt"), 
            sep = c(1,2))
   
@@ -79,8 +102,13 @@ df_main %>% unique()
 df_main %>% summarise(max(patient_id))
 df_main <- df_main %>% arrange(-desc(patient_id))
 
-## Join datasets ####
+# Day 6 ####
+
+## Line 47: Join datasets ####
 df <- full_join(df_main, df_add, by = "patient_id")
+
+# Remove objects used in merge
+rm(df_add, df_main)
 
 # Reorder added variables to be grouped with the categorical data
 df <- df %>% relocate(baseline_temp, .before = base_temp_cat)
@@ -88,27 +116,41 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
-
-#Removing the unnecessary columns (year, month, baseline_esr_cat) ####
+# Line 46: Removing the unnecessary columns (year, month, baseline_esr_cat) ####
 df <- df %>%
   select(-year, -month, -base_esr_cat)
 
 View(df)
 
-#Create a set of new columns: #####
+# Line 48: #### 
+# Make necessary changes in variable types
+# Use glimpse to see variable types
+glimpse(df)
+# Do not find variable types that need to be changed
 
+# Make code to change the categorical variables stored as data type character into numeric
+df %>% 
+  mutate(base_condition_cat = as.numeric(base_condition_cat),
+         base_cavitation = as.numeric(base_cavitation),
+         strep_resistance_cat = as.numeric(strep_resistance_cat),
+         radiologic_6mon_cat = as.numeric(radiologic_6mon_cat))
+ 
+## Line 49 ####
+# Create a set of new columns: #####
 
+### Line 50 ####
 #Changing gender to M=0, F=1 
 df <- df %>% 
   mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
 
+### Line 51 ####
 #Changing F to C 
 install.packages("weathermetrics")
 library (weathermetrics)
 df <- df %>% 
   mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
 
-
+### Line 52 ####
 # a column cutting "baseline_esr" score into quartiles (4 equal parts); HINT: cut() function
 ?cut()
 df <- df %>%
@@ -117,31 +159,79 @@ df <- df %>%
 df %>%
   count(base_esr_quartiles) # I used count to see that 4 groups are created
 
+### Line 53: Strep resistance ####
+# Make a column checking whether there was a streptomycin resistance after being given highest dose of streptomycin
+# rename column containing space 
+df <- df %>% 
+  rename(dose_strep_g = `dose_strep [g]`)
 
-# - a column checking whether there was a streptomycin resistance after being given highest dose of
+df %>% 
+  summarize(max(dose_strep_g))
+  
+df %>% 
+  count(dose_strep_g)
 
+df <- df %>% 
+  mutate(strep_res_developed = case_when(
+                                dose_strep_g == 2 & strep_resistance_cat == 3 ~ "yes",
+                                TRUE ~ "no")) 
+# Check if correct output to new variable strep_res_developed 
+df %>% 
+  count(strep_res_developed, strep_resistance_cat)
 
-
+## Line 54 ####
 #Set the order of the columns 
 df %>% 
   select(patient_id, gender, arm, everything())
 view(df)
 
+## Line 55 ####
 #Arranging patient id in an ascending order
 df <- df %>% 
   arrange(patient_id)
 view(df)
 
+## Missing : Line 56 ####
+# Connect above steps with a pipe (copy-paste)
 
-# Explore Data
+# Line 57: Exploring data ####
 
-## Summary
+## Summary ####
 summary(df)
 skimr::skim(df)
 
-## Explore missing values
+#gender
+df %>%
+  count(gender)
 
+#arm
+df %>%
+  count(arm)
 
+#dose_strep
+df %>%
+  count(dose_strep_g)
 
-# count()
-# df_main %>% naniar::gg_miss_var()
+#base_condition_cat
+df %>%
+  count(base_condition_cat)
+
+#baseline_temp
+df %>%
+  count(baseline_temp)
+
+#base_temp_cat
+df %>%
+  count(base_temp_cat)
+
+#base_temp_txt
+df %>%
+  count(base_temp_txt)
+
+#baseline_esr
+df %>%
+  count(baseline_esr)
+
+## Line 58: Explore and comment missing values ####
+df %>% naniar::gg_miss_var()
+
