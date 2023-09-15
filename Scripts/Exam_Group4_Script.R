@@ -403,4 +403,3 @@ ggplot(df) +
        xlab("Likert radiologic score at 6 months") +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
 
-
