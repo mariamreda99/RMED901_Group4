@@ -16,6 +16,11 @@ library(patchwork)
 df <- read_delim(here("data", "tidy_data_day6.txt"), delim = "\t")
 ```
 
+```{r}
+print("Hello world!")
+```
+
+
 ## About the group
 Group 4 consisted of participants (GitHub user name in parantheses):
 
