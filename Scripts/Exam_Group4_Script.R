@@ -225,7 +225,7 @@ df %>%
 df %>%
   count(baseline_esr)
 
-#continuing line 57, explore data
+
 df %>%
   count(gender, arm, dose_strep_g, base_condition_cat, base_temp_txt, baseline_esr) %>%
   view()
@@ -237,6 +237,7 @@ summary(df)
 names(df)
 tail(df$baseline_esr)
 head(df$base_cavitation_txt)
+
 
 ## Task line  58: Explore and comment missing values ####
 df %>% naniar::gg_miss_var()
@@ -381,7 +382,7 @@ ggplot(df) +
   geom_smooth() +
   facet_grid(rows = vars(improved))
   
-
+### There is no linear relationship between the baseline ESR and the baseline temperature. 
 
 ## Task line 74: Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline? ####
 ggplot(df) +
