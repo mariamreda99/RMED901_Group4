@@ -10,15 +10,20 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(patchwork)
 ```
 
 ## About the group
 Group 4 consisted of participants (GitHub user name in parantheses):
 
-1. Mariam Reda, miriamreda99
-2. Isil Kucuka, iskuc
-3. Bente Sved Skottvoll, 
-4. Mari Eskild Rasmussen, mariesra
+
+1. Mariam Reda (mariamreda99)
+2. Isil Kucuka (iskuc)
+3. Bente Sved Skottvoll (BenteSvedSkottvoll) 
+4. Mari Eskild Rasmussen (mariesra)
+
 
 The GitHub repo can be found here <https://github.com/mariamreda99/RMED901_Group4>
 
@@ -74,6 +79,49 @@ Date: 2023-09-14
 
 ### Task 4: Create plots
 
+#### Are there any correlated measurements?
+
+#####The erythrocyte sedimentation rate in mm per hour at baseline distribution does not depend on `gender`:
+
+```{r, include=FALSE, warning=FALSE}
+ggplot(df) +
+  aes( x = gender,
+       y= baseline_esr) +
+  geom_boxplot()
+```
+
+
+#####Does the erythrocyte sedimentation rate in mm per hour at baseline distribution does depend on `baseline_temp`? Is there a linear relationship?
+```{r, include=FALSE, warning=FALSE}
+ggplot(data = df) +
+  aes( x= baseline_temp_C,
+       y = baseline_esr) +
+  geom_point(
+             size=2) +
+  geom_smooth(
+    method = "lm")
+```
+There is an association between the erytrocyte sedimentation rate at baseline and the baseline temperature. 
+
+
+#####Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline?
+
+```{r, include=F, warning=FALSE}
+ggplot(df) +
+  aes(x = radiologic_6mon_cat, y = baseline_esr) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  labs(title = "Low ESR at baseline implicates better Likert radiologic score at 6 months",
+       caption = "ESR = erythrocyte sedimentation rate, in mm per hour at baseline") +
+       ylab("ESR in mm / hour") +
+       xlab("Likert radiologic score at 6 months") +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6))
+```
+
+
+
+
 #### Mari's log:
 
 Task line 60-64:
@@ -97,9 +145,53 @@ Date: 2023-09-15
 ### Task 5: Analyse the dataset
 
 #### Mariam did this:
+Did the analysis for tasks a, b and d to look at whether randomization arm depends on gender or erythrocyte sedimentation rate in mm per hour at baseline. 
+
+## New variable for randomization arms 
+Also, created a new variable for the arms, turning the control and intervention arms into numerical values (0 and 1)
+
+```{r, include=FALSE}
+df <- df %>% 
+  mutate(arm_numeric = if_else(df$arm == "Control", 0, 1))
+view(df)
+```
+
+## T-test to see if randomization arm depends on gender
+```{r, include=FALSE}
+df %>% 
+  t.test(arm_numeric~Gender_Numeric, data = .)
+```
+To answer, P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender.
+
+## ANOVA test to see if randomization depends on sedimentation rate,
+```{r, include=FALSE}
+ANOVAresult <-
+  df %>% 
+  aov(arm_numeric~base_esr_quartiles, data = .)
+
+ANOVAresult %>%
+  summary()
+```
+To answer, p-value (0.034) is less than 0.05 and therefore, statistically significant. Therefore, the randomization depends on the erythrocyte sedimentation rate. 
+
+## Kruskal-Wallis test to see if there a difference of baseline temperature between different Likert score rating of radiologic response on chest x-ray at 6 months categories 
+```{r}
+df %>% 
+  kruskal.test(baseline_temp~rad_num, data = .) %>%
+  broom::tidy()
+```
+To answer, P-value is 0.00001, therefore stastically significant, which means that there is a difference. 
+
+#### There is an association between streptomycin resistance after 6 months of therapy and erythrocyte sedimentation rate in mm per hour at baseline:
 
 
-#### Mari did this:
+```{r, include=FALSE}
+df %>% 
+  aov(strep_resistance_cat~baseline_esr, data = .) %>% 
+  summary()
+
+```
+
 
 ### Task 6: Write a short report in an Rmd format
 Made this Rmarkdown document and performed different statistical analysis on the data.
