@@ -1,6 +1,6 @@
 # INFO ####
 
-# Load packages ####
+#
 library(tidyverse)
 library(here)
 
@@ -26,11 +26,11 @@ df_main %>%
 # this does not show any duplicates, but several patients are registered twice (at different times)
 
 #checking if there are duplications
-#examdata_tidy %>%
-#  count(patient_id, sort = TRUE)
-#?unique
-#unique(examdata_tidy, incomparables = FALSE)
-#duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
+examdata_tidy %>%
+  count(patient_id, sort = TRUE)
+?unique
+unique(examdata_tidy, incomparables = FALSE)
+duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
 
 # Tidy the data ####
 #changing a column name of column starting with a number, which R does not like
@@ -102,13 +102,8 @@ df_main %>% unique()
 df_main %>% summarise(max(patient_id))
 df_main <- df_main %>% arrange(-desc(patient_id))
 
-# Day 6 ####
-
-## Line 47: Join datasets ####
+## Join datasets ####
 df <- full_join(df_main, df_add, by = "patient_id")
-
-# Remove objects used in merge
-rm(df_add, df_main)
 
 # Reorder added variables to be grouped with the categorical data
 df <- df %>% relocate(baseline_temp, .before = base_temp_cat)
@@ -143,6 +138,7 @@ df <- df %>%
 df <- df %>% 
   mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
 
+#Changing F to C 
 ### Task line  51 ####
 #Changing F to C 
 #install.packages("weathermetrics")
@@ -183,7 +179,6 @@ df %>%
 #Set the order of the columns 
 df %>% 
   select(patient_id, gender, arm, everything())
-
 ## Task line  55 ####
 #Arranging patient id in an ascending order
 df <- df %>% 
@@ -230,7 +225,7 @@ df %>%
 df %>%
   count(baseline_esr)
 
-#continuing line 57, explore data
+
 df %>%
   count(gender, arm, dose_strep_g, base_condition_cat, base_temp_txt, baseline_esr) %>%
   view()
@@ -242,6 +237,7 @@ summary(df)
 names(df)
 tail(df$baseline_esr)
 head(df$base_cavitation_txt)
+
 
 ## Task line  58: Explore and comment missing values ####
 df %>% naniar::gg_miss_var()
@@ -386,7 +382,7 @@ ggplot(df) +
   geom_smooth() +
   facet_grid(rows = vars(improved))
   
-
+### There is no linear relationship between the baseline ESR and the baseline temperature. 
 
 ## Task line 74: Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline? ####
 ggplot(df) +
@@ -407,4 +403,5 @@ ggplot(df) +
        ylab("ESR in mm / hour") +
        xlab("Likert radiologic score at 6 months") +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
+
 
