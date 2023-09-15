@@ -447,3 +447,11 @@ df %>%
   broom::tidy()
 
 ### Yes there is an association
+
+#Task_line_82
+#Was there a difference of baseline temperature between different Likert score rating of radiologic response on chest x-ray at 6 months categories? 
+
+df %>% 
+  kruskal.test(baseline_temp~rad_num, data = .) %>%
+  broom::tidy()
+#Ans: P-value is 0.00001, therefore stastically significant, which means that there is a difference. 
