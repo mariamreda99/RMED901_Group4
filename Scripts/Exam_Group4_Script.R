@@ -23,14 +23,8 @@ tail(df_main)
 ## Check for duplications ####
 df_main %>%
   unique()
-# this does not show any duplicates, but several patients are registered twice (at different times)
+# this does not show any duplicate data, but several patients are registered twice (at different times)
 
-#checking if there are duplications
-examdata_tidy %>%
-  count(patient_id, sort = TRUE)
-?unique
-unique(examdata_tidy, incomparables = FALSE)
-duplicated(examdata_tidy, incomparables = FALSE, fromLast = FALSE)
 
 # Tidy the data ####
 #changing a column name of column starting with a number, which R does not like
@@ -136,7 +130,7 @@ df <- df %>%
 ### Task line  50 ####
 #Changing gender to M=0, F=1 
 df <- df %>% 
-  mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
+  mutate(gender_numeric = if_else(df$gender == "F", 1, 0))
 
 #Changing F to C 
 ### Task line  51 ####
@@ -178,7 +172,8 @@ df %>%
 ## Task line  54 ####
 #Set the order of the columns 
 df %>% 
-  select(patient_id, gender, arm, everything())
+  select(patient_id, gender, gender_numeric, arm, everything())
+
 ## Task line  55 ####
 #Arranging patient id in an ascending order
 df <- df %>% 
@@ -186,6 +181,22 @@ df <- df %>%
 
 ## Missing : Task line  56 ####
 # Connect above steps with a pipe (copy-paste)
+
+# Save tidy data ####
+# Delete duplicate columns
+df <- df %>% 
+  mutate(gender = NULL,
+         base_temp_txt = NULL,
+         base_esr_txt = NULL,
+         base_cavitation_txt = NULL,
+         strep_resistance_txt = NULL,
+         strep_resistance_range = NULL,
+         radiologic_6mon_txt = NULL,
+         rad_num  = NULL,
+         improved  = NULL)
+
+write_delim(df, 
+            file = here("data", "tidy_data_day6.txt"), delim = "\t")
 
 # Task line  57: Exploring data ####
 
@@ -195,7 +206,7 @@ skimr::skim(df)
 
 #gender
 df %>%
-  count(gender)
+  count(gender_numeric)
 
 #arm
 df %>%
@@ -217,22 +228,18 @@ df %>%
 df %>%
   count(base_temp_cat)
 
-#base_temp_txt
-df %>%
-  count(base_temp_txt)
-
 #baseline_esr
 df %>%
   count(baseline_esr)
 
 
 df %>%
-  count(gender, arm, dose_strep_g, base_condition_cat, base_temp_txt, baseline_esr) %>%
+  count(gender_numeric, arm, dose_strep_g, base_condition_cat, baseline_esr) %>%
   view()
 df %>%
-  select(gender, arm, dose_strep_g, strep_resistance_txt, base_cavitation_txt,
-         radiologic_6mon_txt, strep_res_developed)%>%
+  select(gender_numeric, arm, dose_strep_g, strep_res_developed)%>%
   view()
+
 summary(df)
 names(df)
 tail(df$baseline_esr)
@@ -245,9 +252,9 @@ df %>% naniar::gg_miss_var()
 ## Task line 59: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column. ####
 
 df %>%
-  group_by(gender) %>%
+  group_by(gender_numeric) %>%
   summarise(min(baseline_esr, na.rm = T), max(baseline_esr, na.rm =T), mean(baseline_esr, na.rm = T), sd(baseline_esr, na.rm = T))
-### I chose gender as the categorical value and baseline_esr as the numeric
+### I chose gender_numeric as the categorical value and baseline_esr as the numeric
 
 
 ## Task line 60: Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations - use pipe! ####
@@ -256,7 +263,7 @@ df %>%
 
 ### Task line 61: Only for persons with baseline condition 'Fair' ####
 df %>%
-  group_by(gender) %>%
+  group_by(gender_numeric) %>%
   filter(base_condition_cat == 2) %>%
   summarise(min(baseline_esr, na.rm = T),
             max(baseline_esr, na.rm =T), 
@@ -267,8 +274,8 @@ df %>%
 
 ### Task line 62: Only for females####
 df %>%
-  group_by(improved) %>%
-  filter(gender == "F") %>%
+  group_by(radiologic_6mon_cat) %>%
+  filter(gender_numeric == 1) %>%
   summarise(min(baseline_esr, na.rm = T), 
             max(baseline_esr, na.rm = T), 
             mean(baseline_esr, na.rm = T), 
@@ -277,8 +284,8 @@ df %>%
 
 ### Task line 63: Only for persons with baseline temperature 100-100.9F ####
 df %>%
-  group_by(gender) %>%
-  filter(base_temp_txt == "100-100.9F") %>%
+  group_by(gender_numeric) %>%
+  filter(base_temp_cat == 3) %>%
   summarise(min(baseline_esr, na.rm = T), 
             max(baseline_esr, na.rm = T), 
             mean(baseline_esr, na.rm = T), 
@@ -287,7 +294,7 @@ df %>%
 
 ### Task line 64: Only for persons that developed resistance to streptomycin####
 df %>%
-  group_by(gender) %>%
+  group_by(gender_numeric) %>%
   filter(strep_res_developed == "yes") %>%
   summarise(min(baseline_esr, na.rm = T), 
             max(baseline_esr, na.rm = T), 
@@ -307,44 +314,44 @@ df %>%
 library("ggplot2")
 library("patchwork")
 ## Task line 70: Are there any correlated measurements? ####
-# Variables of interest: patient_id 	arm 	dose_strep [g] 	base_condition_cat	baseline_esr_cat 	base_cavitation_txt	strep_resistance_cat	radiologic_6mon_cat	Gender_numeric	baseline_temp_C	strep_res_developed
+# Variables of interest: patient_id 	arm 	dose_strep [g] 	base_condition_cat	baseline_esr_cat 	base_cavitation_txt	strep_resistance_cat	radiologic_6mon_cat	gender_numeric	baseline_temp_C	strep_res_developed
 
 # Baseline esr and temp
 # Not correlated
 ggplot(df) +
   aes(x = baseline_esr, y = baseline_temp_C) +
-         geom_point(aes(color = as.factor(Gender_Numeric)))
+         geom_point(aes(color = as.factor(gender_numeric)))
 
 # Baseline esr and base_condition_cat
 # Correlated
 ggplot(df) +
   aes(x = baseline_esr, y = baseline_temp_C) +
-  geom_point(aes(color = as.factor(Gender_Numeric))) +
-  facet_grid(cols = vars(base_condition_cat), rows = vars(Gender_Numeric)) + 
+  geom_point(aes(color = as.factor(gender_numeric))) +
+  facet_grid(cols = vars(base_condition_cat), rows = vars(gender_numeric)) + 
   theme_minimal()
 
 ggplot(df) +
   aes(x = baseline_esr, y = baseline_temp_C) +
-  geom_col(aes(fill = as.factor(Gender_Numeric))) +
-  facet_grid(cols = vars(base_condition_cat), rows = vars(Gender_Numeric)) +
+  geom_col(aes(fill = as.factor(gender_numeric))) +
+  facet_grid(cols = vars(base_condition_cat), rows = vars(gender_numeric)) +
   theme_minimal()
 
 ggplot(df) +
   aes(x = baseline_esr, y = baseline_temp_C) +
-  geom_col(aes(fill = as.factor(Gender_Numeric))) +
-  facet_grid(cols = vars(base_condition_cat), rows = vars(base_cavitation_txt)) +
+  geom_col(aes(fill = as.factor(gender_numeric))) +
+  facet_grid(cols = vars(base_condition_cat), rows = vars(base_cavitation)) +
   theme_minimal()
   
 
 glimpse(df)
-## Task line 71: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `gender`? ####
+## Task line 71: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on gender? ####
 plot71 <- ggplot(data = df) +
-  aes( x = gender,
+  aes( x = gender_numeric,
        y= baseline_esr) +
   geom_boxplot()
 plot71
 
-# Answer= no, it does not depend on gender.
+# Answer= no, it does not depend on gender_numeric.
 
 ## Task line 72: Does the erythrocyte sedimentation rate in mm per hour at baseline distribution depend on `baseline_temp`? ####
 plot72 <- ggplot(data = df) +
@@ -369,10 +376,10 @@ ggplot(df) +
   aes( x = baseline_esr, 
        y = baseline_temp_C
   ) +
-  geom_point(aes(color = improved, shape = arm)) + 
+  geom_point(aes(color = radiologic_6mon_cat, shape = arm)) + 
   geom_smooth(method = "lm",
               se = FALSE,
-              aes(color = improved))
+              aes(color = radiologic_6mon_cat))
 
 ggplot(df) +
   aes(  x = baseline_esr, 
@@ -380,16 +387,16 @@ ggplot(df) +
        ) +
   geom_point(aes(color = arm)) +
   geom_smooth() +
-  facet_grid(rows = vars(improved))
+  facet_grid(rows = vars(radiologic_6mon_cat))
   
 ### There is no linear relationship between the baseline ESR and the baseline temperature. 
 
 ## Task line 74: Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline? ####
 ggplot(df) +
   aes(x = radiologic_6mon_cat, y = baseline_esr) +
-  geom_point(aes(colour = as.factor(Gender_Numeric))) +
+  geom_point(aes(colour = as.factor(gender_numeric))) +
   geom_smooth(method = "lm") +
-  facet_wrap(facets = vars(Gender_Numeric)) +
+  facet_wrap(facets = vars(gender_numeric)) +
   labs(fill = "Gender") +
   theme_classic()
 
@@ -405,7 +412,7 @@ ggplot(df) +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
 
 
-#Day 8 
+#Day 8 ####
 
 #Task line_79
 #Does the randomization arm depend on the gender?
@@ -416,7 +423,7 @@ view(df)
 
 #doing t-test 
 df %>% 
-  t.test(arm_numeric~Gender_Numeric, data = .)
+  t.test(arm_numeric~gender_numeric, data = .)
 #Ans: P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender
 
 #Task_line_line80
