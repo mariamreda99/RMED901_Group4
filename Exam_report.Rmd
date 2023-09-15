@@ -13,7 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 library(patchwork)
+df <- read_delim(here("data", "tidy_data_day6.txt"), delim = "\t")
 ```
+
+```{r}
+print("Hello world!")
+```
+
 
 ## About the group
 Group 4 consisted of participants (GitHub user name in parantheses):
@@ -85,8 +91,8 @@ Date: 2023-09-14
 
 ```{r, include=FALSE, warning=FALSE}
 ggplot(df) +
-  aes( x = gender,
-       y= baseline_esr) +
+  aes(x = gender_numeric,
+      y = baseline_esr) +
   geom_boxplot()
 ```
 
@@ -159,7 +165,7 @@ view(df)
 ## T-test to see if randomization arm depends on gender
 ```{r, include=FALSE}
 df %>% 
-  t.test(arm_numeric~Gender_Numeric, data = .)
+  t.test(arm_numeric~gender_numeric, data = .)
 ```
 To answer, P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender.
 
@@ -177,7 +183,7 @@ To answer, p-value (0.034) is less than 0.05 and therefore, statistically signif
 ## Kruskal-Wallis test to see if there a difference of baseline temperature between different Likert score rating of radiologic response on chest x-ray at 6 months categories 
 ```{r}
 df %>% 
-  kruskal.test(baseline_temp~rad_num, data = .) %>%
+  kruskal.test(baseline_temp~radiologic_6mon_cat, data = .) %>%
   broom::tidy()
 ```
 To answer, P-value is 0.00001, therefore stastically significant, which means that there is a difference. 
