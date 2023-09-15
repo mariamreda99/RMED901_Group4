@@ -1,0 +1,48 @@
+---
+title: "RMED901 Exam report"
+author: "Group 4"
+date: "`r Sys.Date()`"
+output: html_document:
+  toc: true
+  code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## About the group
+Group 4 consisted of participants (GitHub user name in parantheses):
+
+1.Mariam Reda, miriamreda99
+2.Isil Kucuka, iskuc
+3.Bente Sved Skottvoll, 
+4.Mari Eskild Rasmussen, mariesra
+
+The GitHub repo can be found here <https://github.com/mariamreda99/RMED901_Group4>
+
+## About the data
+
+
+### Codebook
+Task?: Make table of final codebook
+
+## Course day 5
+
+
+## Course day 6
+
+
+## Course day 7
+
+
+## Course day 8
+
+
+## After the course
+
+
+## Session info
+```{r}
+sessionInfo()
+```
