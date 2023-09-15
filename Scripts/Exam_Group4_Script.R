@@ -111,25 +111,6 @@ df <- df %>% relocate(baseline_esr, .before = base_esr_cat)
 # Order dataset observations by patient_id
 df <- df %>% arrange(-desc(patient_id))
 
-<<<<<<< HEAD
-#Removing the unnecessary columns (year, month, baseline_esr_cat) ####
-#month
-df <- df
-  df <- subset(df, select = -c(month))
-view(df)
-
-#year
-df <- df
-df <- subset(df, select = -c(year))
-view(df)
-
-#baseline_esr_cat 
-df <- df
-df <- subset(df, select = -c(base_esr_cat))
-view(df)
-
-
-=======
 # Task line  46: Removing the unnecessary columns (year, month, baseline_esr_cat) ####
 df <- df %>%
   select(-year, -month, -base_esr_cat)
@@ -153,24 +134,18 @@ df <- df %>%
 ## Task line  49: Create a set of new columns: #####
 
 ### Task line  50 ####
->>>>>>> 6611462cae877684ea0c55c12d7c7dfe61a22cd5
 #Changing gender to M=0, F=1 
 df <- df %>% 
   mutate(Gender_Numeric = if_else(df$gender == "F", 1, 0))
 
-<<<<<<< HEAD
 #Changing F to C 
-=======
 ### Task line  51 ####
 #Changing F to C 
 #install.packages("weathermetrics")
->>>>>>> 6611462cae877684ea0c55c12d7c7dfe61a22cd5
 library (weathermetrics)
 df <- df %>% 
   mutate(baseline_temp_C = fahrenheit.to.celsius(df$baseline_temp, round = 2))
 
-<<<<<<< HEAD
-=======
 ### Task line  52 ####
 # a column cutting "baseline_esr" score into quartiles (4 equal parts); HINT: cut() function
 ?cut()
@@ -201,17 +176,9 @@ df %>%
   count(strep_res_developed, strep_resistance_cat)
 
 ## Task line  54 ####
->>>>>>> 6611462cae877684ea0c55c12d7c7dfe61a22cd5
 #Set the order of the columns 
 df %>% 
   select(patient_id, gender, arm, everything())
-
-<<<<<<< HEAD
-#Arranging patient id in an ascending order
-df <- df %>% 
-  arrange(patient_id)
-view(df)
-=======
 ## Task line  55 ####
 #Arranging patient id in an ascending order
 df <- df %>% 
@@ -435,5 +402,3 @@ ggplot(df) +
        ylab("ESR in mm / hour") +
        xlab("Likert radiologic score at 6 months") +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
-
->>>>>>> 6611462cae877684ea0c55c12d7c7dfe61a22cd5
