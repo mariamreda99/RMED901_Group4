@@ -404,7 +404,9 @@ ggplot(df) +
        xlab("Likert radiologic score at 6 months") +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
 
+
 #Day 8 
+
 #Task line_79
 #Does the randomization arm depend on the gender?
 #Creating a numerical variable for the arms 
@@ -429,3 +431,19 @@ ANOVAresult <-
 ANOVAresult %>%
   summary()
 #ans: p-value (0.034) is less than 0.05 and therefore, statistically significant. Therefore, the randomization depends on the erythrocyte sedimentation rate. 
+
+## Task Line 81:  Is there an association between streptomycin resistance after 6 months of therapy and erythrocyte sedimentation rate in mm per hour at baseline? 
+
+glimpse(df$baseline_esr)
+summary(df$baseline_esr)
+
+df %>% 
+  aov(strep_resistance_cat~baseline_esr, data = .) %>% 
+  summary()
+
+df %>% 
+  mutate(baseline_esr = log(baseline_esr)) %>% 
+  aov(baseline_esr~strep_resistance_cat, data = .) %>% 
+  broom::tidy()
+
+### Yes there is an association
