@@ -403,4 +403,28 @@ ggplot(df) +
        xlab("Likert radiologic score at 6 months") +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
 
+#Day 8 
+#Task line_79
+#Does the randomization arm depend on the gender?
+#Creating a numerical variable for the arms 
+df <- df %>% 
+  mutate(arm_numeric = if_else(df$arm == "Control", 0, 1))
+view(df)
 
+#doing t-test 
+df %>% 
+  t.test(arm_numeric~Gender_Numeric, data = .)
+#Ans: P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender
+
+#Task_line_line80
+#Does the randomization arm depend on erythrocyte sedimentation rate in mm per hour at baseline?
+
+#oneway anova (as base_esr_quartiles has multiple levels (t-test does not work))
+
+ANOVAresult <-
+  df %>% 
+  aov(arm_numeric~base_esr_quartiles, data = .)
+
+ANOVAresult %>%
+  summary()
+#ans: p-value (0.034) is less than 0.05 and therefore, statistically significant. Therefore, the randomization depends on the erythrocyte sedimentation rate. 
