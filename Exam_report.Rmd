@@ -163,14 +163,14 @@ view(df)
 ```
 
 ## T-test to see if randomization arm depends on gender
-```{r, include=FALSE}
+```{r}
 df %>% 
   t.test(arm_numeric~gender_numeric, data = .)
 ```
 To answer, P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender.
 
 ## ANOVA test to see if randomization depends on sedimentation rate,
-```{r, include=FALSE}
+```{r}
 ANOVAresult <-
   df %>% 
   aov(arm_numeric~base_esr_quartiles, data = .)
