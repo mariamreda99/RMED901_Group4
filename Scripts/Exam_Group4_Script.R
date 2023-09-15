@@ -411,3 +411,19 @@ ggplot(df) +
        xlab("Likert radiologic score at 6 months") +
   scale_x_continuous(breaks = c(1,2,3,4,5,6))
 
+
+## Day 8 Task 3:  Is there an association between streptomycin resistance after 6 months of therapy and erythrocyte sedimentation rate in mm per hour at baseline? 
+
+glimpse(df$baseline_esr)
+summary(df$baseline_esr)
+
+df %>% 
+  aov(strep_resistance_cat~baseline_esr, data = .) %>% 
+  summary()
+
+df %>% 
+  mutate(baseline_esr = log(baseline_esr)) %>% 
+  aov(baseline_esr~strep_resistance_cat, data = .) %>% 
+  broom::tidy()
+?aov
+### Yes there is an association
