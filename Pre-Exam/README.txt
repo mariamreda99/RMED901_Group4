@@ -73,22 +73,23 @@ X6m_radiologic:
 5= Moderate improvement
 6= Considerable improvement
 
+# Day 4 
+# 2023-09-14
 
-# Maris log
 
-#start
-Exam work started on day 4 of the course (monday 11.09.23). We created the github group-project.
-
-Day 5
-Tidying the data. Used the separate function to divide the columns that contained different data types. Renamed columns. Explored the data. 
-
-Day 6
-Exploring the data. We used some time colaborating when merging the files from day 5, resolving conflicts. 
-
-Day 7
+Mari's log:
+-----
 Task line 60-64:
 "Stratify your data by a categorical column and report min, max, mean and sd of a numeric column for a defined set of observations" - I used the group by, filter and summarise function.
 
 Task line 73: "Do erythrocyte sedimentation rate in mm per hour at baseline and baseline temperature have a linear relationship?""
 Visualizing the data using ggplot. I tested different versions of dot plots and stratefied for different variables. .
 
+Bente's log: 
+------
+Made codebook for the dataset in Excel, with column for encoding. See that we have duplicate columns. It is easier to get an variable overview with a codebook.
+
+Made a few exploratory plots to look for correlated measurements. Baseline ESR and baseline condition seem to be correlated.
+
+Answered exam task at line 74: 
+Made plot comparing erytrocyte sedimentation rate (ESR) at baseline to Likert radiologic score at 6 months follow-up. Used geom_point with geom_smooth, decluttered by theme_classic and added main title, caption, x-axis and y-axis title, and changed x-axis tick labels to show all Likert categories (1-6).

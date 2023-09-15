@@ -10,7 +10,7 @@ Ans: Gender is repeated in the gender column, and also in gender_arm variable
 Duplications: 
 -In month variable, there are some repeated values
 -Are there any columns starting in a number, containing space? 
-Ans: no
+Ans: yes
 -Are all variables as columns? 
 Ans: Yes 
 -Are there any columns containing combined variables? 
