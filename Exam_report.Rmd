@@ -111,7 +111,7 @@ ggplot(data = df) +
     labs(title = "Baseline ESR increases with increasing baseline temperature",
          caption = "ESR: erythrocyte sedimentation rate") +
          ylab("Baseline ESR (mm/hour)") +
-         xlab("Baseline temperature (°C)")
+         xlab("Baseline temperature °C")
     
 ```
 
