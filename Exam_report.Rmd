@@ -19,7 +19,7 @@ df <- read_delim(here("data", "tidy_data_day6.txt"), delim = "\t")
 
 
 ## About the group
-Group 4 consisted of participants (GitHub user name in parantheses):
+Group 4 consisted of the following participants (GitHub user name in parantheses):
 
 
 1. Mariam Reda (mariamreda99)
@@ -90,7 +90,12 @@ The erythrocyte sedimentation rate in mm per hour at baseline distribution does 
 ggplot(df) +
   aes(x = as.factor(gender_numeric),
       y = baseline_esr) +
+  labs(title = "Erythrocyte sedimentation rate does not depend on gender", 
+       caption = "0: Male, 1: Female") +
+  xlab("Gender") +
+  ylab("Erythrocyte sedimentation rate(mm/hour)")+
   geom_boxplot()
+  
 ```
 
 
@@ -100,10 +105,14 @@ Does the erythrocyte sedimentation rate in mm per hour at baseline distribution 
 ggplot(data = df) +
   aes( x= baseline_temp_C,
        y = baseline_esr) +
-  geom_point(
-             size=2) +
-  geom_smooth(
-    method = "lm")
+  geom_point(size=2) +
+  theme_classic() +
+  geom_smooth(method = "lm") +
+    labs(title = "Baseline ESR increases with increasing baseline temperature",
+         caption = "ESR: erythrocyte sedimentation rate") +
+         ylab("Baseline ESR (mm/hour)") +
+         xlab("Baseline temperature (°C)")
+    
 ```
 
 
@@ -126,27 +135,14 @@ ggplot(df) +
 ```
 
 
-
-
-#### Bente's log: 
-Made codebook for the dataset in Excel, with column for encoding. Here we see that we have duplicate columns. It is easier to get an overview of our variables with a codebook.
-
-Made a few exploratory plots to look for correlated measurements. Baseline ESR and baseline condition seem to be correlated.
-
-Answered exam task at line 74: 
-Made plot comparing erytrocyte sedimentation rate (ESR) at baseline to Likert radiologic score at 6 months follow-up. Used geom_point with geom_smooth, decluttered by theme_classic and added main title, caption, x-axis and y-axis title, and changed x-axis tick labels to show all Likert categories (1-6).
-
-
 ## Course day 8
 Date: 2023-09-15
 
 ### Task 5: Analyse the dataset
 
-#### Mariam did this:
-Did the analysis for tasks a, b and d to look at whether randomization arm depends on gender or erythrocyte sedimentation rate in mm per hour at baseline. 
 
-## New variable for randomization arms 
-Also, created a new variable for the arms, turning the control and intervention arms into numerical values (0 and 1)
+#### New variable for randomization arms 
+Also, created a new variable for the arms, turning the control and intervention arms into numerical values (Control = 0 and Intervention = 1)
 
 ```{r, include=FALSE}
 df <- df %>% 
@@ -154,14 +150,16 @@ df <- df %>%
 view(df)
 ```
 
-## T-test to see if randomization arm depends on gender
+#### T-test 
+Check to see if randomization of arm depends on gender.
 ```{r}
 df %>% 
   t.test(arm_numeric~gender_numeric, data = .)
 ```
 To answer, P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender.
 
-## ANOVA test to see if randomization depends on sedimentation rate,
+#### ANOVA test 
+Check to see if randomization depends on sedimentation rate.
 ```{r}
 ANOVAresult <-
   df %>% 
@@ -172,7 +170,8 @@ ANOVAresult %>%
 ```
 To answer, p-value (0.034) is less than 0.05 and therefore, statistically significant. Therefore, the randomization depends on the erythrocyte sedimentation rate. 
 
-## Kruskal-Wallis test to see if there a difference of baseline temperature between different Likert score rating of radiologic response on chest x-ray at 6 months categories 
+#### Kruskal-Wallis test 
+To see if there a difference of baseline temperature between different Likert score rating of radiologic response on chest x-ray at 6 months categories 
 ```{r}
 df %>% 
   kruskal.test(baseline_temp~radiologic_6mon_cat, data = .) %>%
@@ -180,7 +179,9 @@ df %>%
 ```
 To answer, P-value is 0.00001, therefore stastically significant, which means that there is a difference. 
 
-#### There is an association between streptomycin resistance after 6 months of therapy and erythrocyte sedimentation rate in mm per hour at baseline:
+#### ANOVA test
+
+There is an association between streptomycin resistance after 6 months of therapy and erythrocyte sedimentation rate in mm per hour at baseline:
 
 
 ```{r, include=FALSE}
@@ -192,14 +193,10 @@ df %>%
 
 
 ### Task 6: Write a short report in an Rmd format
-Made this Rmarkdown document and performed different statistical analysis on the data.
-
-
-## Preparation for handing in the exam
-Some last additions and changes after course day 8 are written here.
+Made this Rmarkdown document and performed different statistical analysis on the data. 
 
 ## How did the group work together?
-We have divided the tasks between each other each day. After pulling the last updates, we have each made a GitHub-branch daily, and performed our tasks in the project. At the end of the day or before the next session we have merged our branches by staging, committing, pushing and resolving our changes. The resolving of issues and additions to our GitHub repo have been made in collaboration. 
+We have divided the tasks between each other each day. After pulling the last updates, we have each made a GitHub-branch daily, and performed our tasks in the project. At the end of the day or before the next session we have merged our branches by staging, committing, pushing and resolving our changes. The resolving of issues and additions to our GitHub repo have been made in collaboration. After the last course day we have communicated through the discussion area in mitt.uib.
 
 
 ## Session info
