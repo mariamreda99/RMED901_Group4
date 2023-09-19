@@ -90,7 +90,12 @@ The erythrocyte sedimentation rate in mm per hour at baseline distribution does 
 ggplot(df) +
   aes(x = as.factor(gender_numeric),
       y = baseline_esr) +
+  labs(title = "Erythrocyte sedimentation rate does not depend on gender", 
+       caption = "0: Male, 1: Female") +
+  xlab("Gender") +
+  ylab("Erythrocyte sedimentation rate(mm/hour)")+
   geom_boxplot()
+  
 ```
 
 
@@ -100,10 +105,14 @@ Does the erythrocyte sedimentation rate in mm per hour at baseline distribution 
 ggplot(data = df) +
   aes( x= baseline_temp_C,
        y = baseline_esr) +
-  geom_point(
-             size=2) +
-  geom_smooth(
-    method = "lm")
+  geom_point(size=2) +
+  theme_classic() +
+  geom_smooth(method = "lm") +
+    labs(title = "Baseline ESR increases with increasing baseline temperature",
+         caption = "ESR: erythrocyte sedimentation rate") +
+         ylab("Baseline ESR (mm/hour)") +
+         xlab("Baseline temperature (°C)")
+    
 ```
 
 
