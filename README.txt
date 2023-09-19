@@ -8,19 +8,20 @@
 The project folder outline
 
 -RMED901_Group4
-  -data
+  -DATA
       codebook.html
       exam_data_join.txt
       exam_data.txt
-  -Exam_questions
+  -Preprations
       exam_descr.md
-  -pre-exam
-      
-  |-scripts
-  |.gitignore
-  |Exam_report.html
-  |Exam_report.Rmd
-  |README.md
-  |RMED901_Group4.Rproj
+  -Scripts
+      .Rhistory
+      Exam_Group4_Script.R
+  .gitignore
+  Exam_report.html
+  Exam_report.Rmd
+  README.txt
+  RMED901_Group4.Rproj
+  Codebook_RMED901_exam_group4.xlsx
   
 The file descriptions
