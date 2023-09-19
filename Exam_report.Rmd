@@ -34,7 +34,7 @@ The GitHub repo can be found here <https://github.com/mariamreda99/RMED901_Group
 
 
 ### Codebook
-Bente and Isil made an updated version of the Codebook, included in the data folder. 
+Bente and Isil made an updated version of the Codebook, included in the project folder. 
 
 ## Course day 5
 
