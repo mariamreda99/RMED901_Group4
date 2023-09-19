@@ -8,13 +8,13 @@
 The folder outline of exam project folder RMED901_Group4:
 ========================================================
 -RMED901_Group4
-|--DATA
+|--data
 |-----codebook.html
 |-----exam_data_join.txt
 |-----exam_data.txt
-|--Preprations
+|--preparations
 |-----exam_descr.md
-|--Scripts
+|--scripts
 |-----.Rhistory
 |-----Exam_Group4_Script.R
 |-.gitignore
