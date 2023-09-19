@@ -1,0 +1,208 @@
+---
+title: "RMED901 Exam report"
+author: "Group 4"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(patchwork)
+df <- read_delim(here("data", "tidy_data_day6.txt"), delim = "\t")
+```
+
+
+
+## About the group
+Group 4 consisted of participants (GitHub user name in parantheses):
+
+
+1. Mariam Reda (mariamreda99)
+2. Isil Kucuka (iskuc)
+3. Bente Sved Skottvoll (BenteSvedSkottvoll) 
+4. Mari Eskild Rasmussen (mariesra)
+
+
+The GitHub repo can be found here <https://github.com/mariamreda99/RMED901_Group4>
+
+## About the data
+
+
+### Codebook
+Bente and Isil made an updated version of the Codebook, included in the data folder. 
+
+## Course day 5
+
+### Task 1 
+Create an RStudio project (done on 11.09.2023) 
+ 
+### Task 2: Read and tidy the dataset 
+Date: 2023-09-14
+
+We agreed to work first individually (on different branches), then compare our scripts and merge them into one. 
+
+**Checklist: **
+
+* Are there unique observations in the dataset? (Any duplications?) 
+  + *Answer: Gender is repeated in the gender column, and also in gender_arm variable. They are duplications and we deleted `::TEXT HERE::`.*
+* Are there any columns starting in a number, containing space? 
+  + *Answer: Yes, we have renamed 6m_radiologic to X6m_radiologic *
+* Are all variables as columns? 
+  + *Answer: Yes *
+* Are there any columns containing combined variables? 
+  + *Answer: Yes, gender_arm variable and baseline_condition, baseline_temp_cat, baseline_esr_cat, strep_resistance, X6m_radiologic.*
+
+**Recommended changes**
+
+  1) Removing the gender from the arm variable
+  2) Sort the years and patient ids
+  3) Improved variable can be changed to TRUE=1, False=0
+  4) baseline cavitation can be changed to Yes=1, no=0
+  5) Keeping the numbers (values rating the answers) in the condition variables instead of the text
+  6) Removing the number from the variable 6m_radiologic at the beginning
+  7) changing gender to 0,1 
+  8) changing control and intervention to 0,1 
+
+## Course day 6 
+Date: 2023-09-13
+
+### Task 3: Tidy, adjust, and explore
+Making changes to the dataset 
+
+We tidied the data, checked for duplicates, changed the columns that include both the category number and the explanation of the category, further info about the data can be found in the README.txt and the codebook.
+
+
+## Course day 7
+Date: 2023-09-14
+
+### Task 4: Create plots
+
+#### Are there any correlated measurements?
+
+The erythrocyte sedimentation rate in mm per hour at baseline distribution does not depend on `gender`:
+
+```{r, warning=FALSE}
+ggplot(df) +
+  aes(x = as.factor(gender_numeric),
+      y = baseline_esr) +
+  geom_boxplot()
+```
+
+
+Does the erythrocyte sedimentation rate in mm per hour at baseline distribution does depend on `baseline_temp`? Is there a linear relationship?
+
+```{r, warning=FALSE}
+ggplot(data = df) +
+  aes( x= baseline_temp_C,
+       y = baseline_esr) +
+  geom_point(
+             size=2) +
+  geom_smooth(
+    method = "lm")
+```
+
+
+There is an association between the erytrocyte sedimentation rate at baseline and the baseline temperature. 
+
+
+Does Likert score rating of radiologic response on chest x-ray at 6 months change with erythrocyte sedimentation rate in mm per hour at baseline?
+
+```{r, warning=FALSE}
+ggplot(df) +
+  aes(x = radiologic_6mon_cat, y = baseline_esr) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_classic() +
+  labs(title = "Low ESR at baseline implicates better Likert radiologic score at 6 months",
+       caption = "ESR = erythrocyte sedimentation rate, in mm per hour at baseline") +
+       ylab("ESR in mm / hour") +
+       xlab("Likert radiologic score at 6 months") +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6))
+```
+
+
+
+
+#### Bente's log: 
+Made codebook for the dataset in Excel, with column for encoding. Here we see that we have duplicate columns. It is easier to get an overview of our variables with a codebook.
+
+Made a few exploratory plots to look for correlated measurements. Baseline ESR and baseline condition seem to be correlated.
+
+Answered exam task at line 74: 
+Made plot comparing erytrocyte sedimentation rate (ESR) at baseline to Likert radiologic score at 6 months follow-up. Used geom_point with geom_smooth, decluttered by theme_classic and added main title, caption, x-axis and y-axis title, and changed x-axis tick labels to show all Likert categories (1-6).
+
+
+## Course day 8
+Date: 2023-09-15
+
+### Task 5: Analyse the dataset
+
+#### Mariam did this:
+Did the analysis for tasks a, b and d to look at whether randomization arm depends on gender or erythrocyte sedimentation rate in mm per hour at baseline. 
+
+## New variable for randomization arms 
+Also, created a new variable for the arms, turning the control and intervention arms into numerical values (0 and 1)
+
+```{r, include=FALSE}
+df <- df %>% 
+  mutate(arm_numeric = if_else(df$arm == "Control", 0, 1))
+view(df)
+```
+
+## T-test to see if randomization arm depends on gender
+```{r}
+df %>% 
+  t.test(arm_numeric~gender_numeric, data = .)
+```
+To answer, P-value (0.8) is bigger than 0.05, therefore not statistically significant. Therefore, randomization arm does not depend on gender.
+
+## ANOVA test to see if randomization depends on sedimentation rate,
+```{r}
+ANOVAresult <-
+  df %>% 
+  aov(arm_numeric~base_esr_quartiles, data = .)
+
+ANOVAresult %>%
+  summary()
+```
+To answer, p-value (0.034) is less than 0.05 and therefore, statistically significant. Therefore, the randomization depends on the erythrocyte sedimentation rate. 
+
+## Kruskal-Wallis test to see if there a difference of baseline temperature between different Likert score rating of radiologic response on chest x-ray at 6 months categories 
+```{r}
+df %>% 
+  kruskal.test(baseline_temp~radiologic_6mon_cat, data = .) %>%
+  broom::tidy()
+```
+To answer, P-value is 0.00001, therefore stastically significant, which means that there is a difference. 
+
+#### There is an association between streptomycin resistance after 6 months of therapy and erythrocyte sedimentation rate in mm per hour at baseline:
+
+
+```{r, include=FALSE}
+df %>% 
+  aov(strep_resistance_cat~baseline_esr, data = .) %>% 
+  summary()
+
+```
+
+
+### Task 6: Write a short report in an Rmd format
+Made this Rmarkdown document and performed different statistical analysis on the data.
+
+
+## Preparation for handing in the exam
+Some last additions and changes after course day 8 are written here.
+
+## How did the group work together?
+We have divided the tasks between each other each day. After pulling the last updates, we have each made a GitHub-branch daily, and performed our tasks in the project. At the end of the day or before the next session we have merged our branches by staging, committing, pushing and resolving our changes. The resolving of issues and additions to our GitHub repo have been made in collaboration. 
+
+
+## Session info
+```{r}
+sessionInfo()
+```
